@@ -1,9 +1,7 @@
 package main;
 
-import frame.MainFrame;
 import grafica.Grafica;
 import javax.swing.JOptionPane;
-import panel.HomePanel;
 
 public class Start {
 	

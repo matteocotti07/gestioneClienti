@@ -7,7 +7,6 @@ package grafica;
 
 import frame.MainFrame;
 import java.awt.CardLayout;
-import java.awt.Point;
 import javax.swing.JPanel;
 import panel.HomePanel;
 
@@ -17,14 +16,12 @@ import panel.HomePanel;
  */
 public class Grafica {
     
-    //dichiarazione oggetti
     public static CardLayout card;
     public static JPanel container;
     public static MainFrame mainFrame;
     
     public Grafica(){
         
-        //inizializzazione oggetti
         mainFrame  = new MainFrame("Gestione Clienti");
         card = new CardLayout();
         container = new JPanel();

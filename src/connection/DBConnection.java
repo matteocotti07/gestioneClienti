@@ -45,7 +45,7 @@ public class DBConnection {
         }
         
         try {
-            connessione = (Connection) DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7114898","sql7114898","RC4ZIQMDHd");
+            connessione = (Connection) DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7155821","sql7155821","vVA8BnPBnA");
             System.out.println("Database Connected");
         } catch (SQLException ex) {
             System.out.println("Impossible to connect to the DB");
