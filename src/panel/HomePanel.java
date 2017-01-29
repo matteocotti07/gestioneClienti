@@ -1,17 +1,39 @@
 package panel;
 
+import cliente.Cliente;
 import grafica.Grafica;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import main.Controller;
+import query.Load;
 
 public class HomePanel extends JPanel{
     
+    public static Controller controller = Controller.getInstance();
+    
+    private void loadData (){
+    
+        try {
+            controller.clienti.clear(); controller.visite.clear();
+            Load.clienti(); Load.visite();
+        } catch (SQLException ex) {
+            System.out.println("Errore durante il caricamento dei dati dal database");
+        }
+
+    }
+    
     public HomePanel (){
+        loadData();
+        
 	setLayout(new GridLayout(2, 1, 0, 0));
         
         JPanel titlePanel = new JPanel();
@@ -34,9 +56,22 @@ public class HomePanel extends JPanel{
         });
         
         nuovaVisitaButton.addActionListener((ActionEvent e) -> {
-            NuovaVisitaPanel nvp = new NuovaVisitaPanel();
-            Grafica.container.add(nvp, "nuovaVisita");
-            Grafica.card.show(Grafica.container, "nuovaVisita");
+            loadData();
+            
+            String[] clienti = new String[controller.clienti.size()];
+            for (int i = 0; i < controller.clienti.size(); i++) {
+                clienti[i] = controller.clienti.get(i).getCognome().toUpperCase()+" "+controller.clienti.get(i).getNome();
+            }
+            String clienteSel = (String) JOptionPane.showInputDialog(null,"Seleziona un cliente","Nuova visita",JOptionPane.QUESTION_MESSAGE,null,clienti,clienti[0]);
+            try {
+                String[] nomeCognome = clienteSel.split(" ");
+                Cliente cliente = Load.clienteByCognomeNome(nomeCognome[0].substring(0, 1) + nomeCognome[0].substring(1).toLowerCase(), nomeCognome[1]);
+                NuovaVisitaPanel nvp = new NuovaVisitaPanel(cliente);
+                Grafica.container.add(nvp, "nuovaVisita");
+                Grafica.card.show(Grafica.container, "nuovaVisita");
+            } catch (SQLException ex) {
+                System.out.println("Errore durante il caricamento dei dati dal database");
+            }           
         });
         
         JLabel titleLabel = new JLabel("GESTIONE CLIENTI"); titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 50)); 

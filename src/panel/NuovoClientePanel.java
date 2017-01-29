@@ -10,22 +10,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import query.Insert;
 
 /**
@@ -34,12 +29,13 @@ import query.Insert;
  */
 public class NuovoClientePanel extends JPanel{
     
-    private String[] sessi = {"M", "S"};
+    private String[] sessi = {"M", "F"};
     private String[] giorni = new String[31];
     private String[] mesi = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
     private String[] anni = new String[119];
     
     public  NuovoClientePanel (){
+
         riempiGiorni(); riempiAnni();
         
         setLayout(new GridLayout(3, 1, 0, 0));
@@ -51,8 +47,8 @@ public class NuovoClientePanel extends JPanel{
         
         JLabel titleLabel = new JLabel("NUOVO CLIENTE"); titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 50)); 
         
-        JTextField nome = new JTextField(); nome.setPreferredSize(new Dimension(150, 25));
-        JTextField cognome = new JTextField(); cognome.setPreferredSize(new Dimension(150, 25));
+        JTextField nome = new JTextField(); nome.setPreferredSize(new Dimension(150, 45));
+        JTextField cognome = new JTextField(); cognome.setPreferredSize(new Dimension(150, 45));
         JComboBox sesso = new JComboBox(sessi);
         JComboBox giorno = new JComboBox(giorni);
         JComboBox mese = new JComboBox(mesi);
@@ -69,21 +65,28 @@ public class NuovoClientePanel extends JPanel{
         
         salva.addActionListener((ActionEvent e) -> {
             try {
-                Insert.nuovoCliente(cognome.getText(), nome.getText(), calcolaEta(giorno.getSelectedItem().toString(),
+                Insert.nuovoCliente(nome.getText(), cognome.getText(), calcolaEta(giorno.getSelectedItem().toString(),
                         mese.getSelectedItem().toString(), anno.getSelectedItem().toString()), sesso.getSelectedItem().toString());
-                } catch (SQLException ex) {
-                    System.out.println("Errore dutante il salvataggio di un nuovo cliente");
-                } catch (ParseException ex) {
-                    System.out.println("Errore dutante il calcolo dell'eta' del cliente");
+                JOptionPane.showMessageDialog(null, "Nuovo cliente inserito correttamente", "Operazione avvenuta con  successo", JOptionPane.INFORMATION_MESSAGE);
+                Grafica.card.show(Grafica.container, "home");
+            } catch (SQLException ex) {
+                System.out.println("Errore dutante il salvataggio di un nuovo cliente");
+            } catch (ParseException ex) {
+                System.out.println("Errore dutante il calcolo dell'eta' del cliente");
             }
         });
         
         
         titlePanel.add(titleLabel);
         
+        nome.setBorder(BorderFactory.createTitledBorder("Nome"));
+        cognome.setBorder(BorderFactory.createTitledBorder("Cognome"));
+        sesso.setBorder(BorderFactory.createTitledBorder("Sesso"));
+        
         dataPanel.add(giorno);
         dataPanel.add(mese);
         dataPanel.add(anno);
+        dataPanel.setBorder(BorderFactory.createTitledBorder("Data di nascita"));
         
         mainPanel.add(nome);
         mainPanel.add(cognome);
